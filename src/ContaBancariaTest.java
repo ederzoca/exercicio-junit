@@ -28,19 +28,46 @@ public class ContaBancariaTest {
 
     @Test
     public void testSacarSemSaldoSuficiente() {
-        conta.sacar(2000.0);
+        try {
+            conta.sacar(2000.0);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("O valor do saque não pode ser maior que o saldo", e.getMessage());
+        }
         Assert.assertEquals(1000.0, conta.getSaldo(), 0); // Verifica se o saldo permanece 1000 ao tentar sacar 2000
     }
 
     @Test
     public void testDepositarQuantiaNegativa() {
-        conta.depositar(-100.0);
+        try {
+            conta.depositar(-100.0);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("O valor do depósito não pode ser negativo", e.getMessage());
+        }
         Assert.assertEquals(1000.0, conta.getSaldo(), 0); // Verifica se o saldo permanece 1000 ao tentar depositar -100
     }
 
     @Test
     public void testSacarQuantiaNegativa() {
-        conta.sacar(-100.0);
+        try {
+            conta.sacar(-100.0);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("O valor do saque não pode ser negativo", e.getMessage());
+        }
         Assert.assertEquals(1000.0, conta.getSaldo(), 0); // Verifica se o saldo permanece 1000.0 ao tentar sacar -100
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testValorDeDepositoNegativo() {
+        conta.depositar(-10.0);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testValorDeSaqueNegativo() {
+        conta.sacar(-10.0);
+    }
+
+    @Test(expected=IllegalArgumentException.class)
+    public void testValorDeSaqueMaiorQueSaldo() {
+        conta.sacar(1100.0);
     }
 }
